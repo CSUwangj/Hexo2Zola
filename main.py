@@ -15,13 +15,16 @@ def get_arguments():
     return parser.parse_args()
 
 def convert_frontmatter(txt: str, updated: datetime.datetime) -> str:
+    // txt = res.sub(r'\t-', r'  -', txt)
+    // when frontmatter indent using tabs, uncomment
+    // line above
     post = frontmatter.loads(txt)
     obj = post.metadata
     obj['updated'] = updated.isoformat()
     obj['description'] = obj['desc']
     obj['in_search_index'] = True
     obj['taxonomies'] = {}
-    obj['taxonomies']['tags'] = obj['tags']
+    obj['taxonomies']['tags'] = obj['tags'] if isinstance(obj['tags'], list) else [obj['tags']]
     obj['taxonomies']['categories'] = obj['categories'] if isinstance(obj['categories'], list) else [obj['categories']]
     obj['taxonomies']['archives'] = ['archive']
     obj['date'] = obj['date'].isoformat()
